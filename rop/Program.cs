@@ -82,12 +82,13 @@ namespace RailwayOrientedProgramming
 
         static Func<TIn, TIn> Tee<TIn>(Action<TIn> action)
         {
-            return (TIn input) => { action(input); return input; };
+            return input => { action(input); return input; };
         }
 
-        static Func<Result<TIn>, Result<TIn>> Audit<TIn>(Action<TIn> action)
+        static Func<Result<TIn>, Result<TIn>> Audit<TIn>(Action<TIn> deadEndFunction)
         {
-            return Map<TIn, TIn>(Tee(action));
+            // return Map(Tee(action)); // or, in directly terms of Bind:
+            return Bind<TIn, TIn>(input => { deadEndFunction(input); return input; });
         }
     }
 }
